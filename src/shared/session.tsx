@@ -35,7 +35,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         <Loading />
       </main>
     );
-  if (session.isError)
+  // A transient background refresh failure should preserve the user's open form.
+  if (
+    session.data === undefined ||
+    (session.error instanceof ApiError && session.error.status === 403)
+  )
     return (
       <main>
         <ErrorState error={session.error} retry={() => void session.refetch()} />

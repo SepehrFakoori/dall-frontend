@@ -6,13 +6,13 @@ A React/TypeScript workspace with username/password sign-in, an editable persona
 
 | Environment | Frontend configuration | Backend base URL          | Build command            |
 | ----------- | ---------------------- | ------------------------- | ------------------------ |
-| Development | `.env.development`     | `http://localhost:8000`   | `pnpm build:development` |
-| Staging     | `.env.staging`         | `https://staging.dall.ir` | `pnpm build:staging`     |
-| Production  | `.env.production`      | `https://api.dall.ir`     | `pnpm build:production`  |
+| Development | `env/.env.dev`         | `http://localhost:8000`   | `pnpm build:development` |
+| Staging     | `env/.env.staging`     | `https://staging.dall.ir` | `pnpm build:staging`     |
+| Production  | `env/.env.prod`        | `https://api.dall.ir`     | `pnpm build:production`  |
 
 `pnpm dev` uses development. `pnpm build` defaults to production. After building, use `pnpm preview --mode staging` (or the corresponding mode) to preview that build. Use `pnpm demo` to run the standalone browser demo with username `demo` and password `Dall-Demo-2026`.
 
-Set `BACKEND_BASE_URL` in each mode file. Use a mode-specific override such as `.env.development.local` for local work, or set the variable in the build environment. If a backend later adds a path, append it to its base URL and rebuild.
+The three addresses above are the defaults for clean checkouts. To override one, copy `env/.env.sample` to the corresponding filename and set `BACKEND_BASE_URL`. A process or CI variable takes precedence. Append a future backend path to this URL and rebuild. Git tracks only the public sample. Docker excludes the working env files. Client code receives only the API mount and adapter mode.
 
 The browser calls its own origin at `/api/`. Vite and the packaged Nginx configuration forward the suffix to the selected backend. For example, the staging build forwards `/api/auth/session/` to `https://staging.dall.ir/auth/session/`. The backend must trust its frontend's HTTPS origin for CSRF-protected writes. For a static host, configure its gateway to forward the same path and send API requests there before applying the SPA fallback. Each build writes the corresponding Nginx location to `dist/api-location.conf`.
 
@@ -41,7 +41,7 @@ Browser tests use an installed Google Chrome (`channel: chrome`). For CI, provis
 - `src/features/account` contains the sign-in and personal profile screens. `src/shared` provides the session context, account adapters, locale, UI primitives, and HTTP client.
 - `src/styles`: semantic tokens followed by component/layout rules. No global server-state store.
 
-React Router data mode provides URL state, route splitting, and navigation blockers. TanStack Query owns records and invalidation; React Hook Form + Zod own form state and field errors. Radix supplies focus-managed dialogs, menus, popovers, tabs, switches and tooltips. Native inputs and selects handle ordinary controls. Lucide is the sole icon library. Plain CSS avoids an additional styling runtime. TypeScript 6.0 is intentionally selected because the current stable TypeScript ESLint parser requires `<6.1`; latest TypeScript 7 is incompatible. Resolved stable versions are locked, with no peer-dependency errors.
+React Router handles URLs, lazy routes, and unsaved navigation. TanStack Query owns fetched records and cache invalidation. React Hook Form and Zod handle form state and validation. Radix supplies focus-managed overlays and keyboard navigation. CSS tokens define the visual system. Install the versions pinned in `pnpm-lock.yaml` with a frozen lockfile.
 
 Official references checked during setup: [React releases](https://react.dev/community/versioning-policy), [Vite setup](https://vite.dev/guide/), [Router data mode](https://reactrouter.com/api/data-routers/createBrowserRouter), [Query](https://tanstack.com/query/latest/docs/framework/react/overview), [React Hook Form](https://react-hook-form.com/get-started), and [Radix Dialog](https://www.radix-ui.com/primitives/docs/components/dialog).
 
@@ -53,6 +53,8 @@ Official references checked during setup: [React releases](https://react.dev/com
 4. Add every UI message to `shared/i18n/messages.ts`. Persian is a complete typed dictionary; English is the fallback. `t()` interpolates named placeholders; `count()` uses `Intl.PluralRules`. Entity content is not translated. Use `<bdi>` or `dir="ltr"` for mixed-direction identifiers, emails and telephone numbers.
 
 ## Visual and regional conventions
+
+The shared `Icon` component renders a local SVG sprite from Iconsax v1.0 Outline by Vuesax. Use `<Icon name="user" size={18} />` inside a labeled control. Each glyph inherits the surrounding text color. Apply the `directional` class to navigation arrows that follow the reading direction. To add a glyph, copy its original 24px outline paths into `src/assets/icons/iconsax-outline.svg` under its upstream name and extend `IconName` in `src/shared/icon.tsx`. [Original Outline SVGs](https://github.com/Vuesax/iconsax/tree/fe4af30929dc0275b63baeb5a25f43ebcebb038b/assets/icons/outline) · [Upstream license](public/licenses/iconsax.txt)
 
 The language preference sets HTML `lang` and `dir` and the Radix direction provider before paint. Persian uses RTL, and English uses LTR. Menus, tab keyboard navigation, drawers, and directional icons follow the interface. Names and notes can mix scripts. Email addresses and phone numbers use LTR. Persian uses the supplied self-hosted IRANSansX variable WOFF2. A Unicode-range face also selects it for Persian glyphs within English UI. The regular numeral variant preserves the independent numbering preference.
 
@@ -86,7 +88,7 @@ docker build -t dall-frontend .
 docker run --rm -p 8080:8080 dall-frontend
 ```
 
-The image builds production by default. Choose staging with `docker build --build-arg FRONTEND_ENV=staging -t dall-frontend:staging .`. Nginx loads the API location generated by that build and serves the frontend on port 8080. For a containerized development build, configure a backend address reachable from the container because localhost refers to the container itself.
+The image builds production by default. Choose staging with `docker build --build-arg FRONTEND_ENV=staging -t dall-frontend:staging .`. To override the public upstream address, pass `--build-arg BACKEND_BASE_URL=https://your-api.example/v1`. Nginx loads the API location generated by that build and serves the frontend on port 8080. For a containerized development build, configure a backend address reachable from the container because localhost refers to the container itself.
 
 ## Verification and limits
 

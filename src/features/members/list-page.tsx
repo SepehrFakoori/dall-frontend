@@ -1,19 +1,9 @@
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate, useSearchParams } from 'react-router';
-import {
-  ArrowDownUp,
-  ChevronLeft,
-  ChevronRight,
-  Plus,
-  RefreshCw,
-  Search,
-  Users,
-  X,
-} from 'lucide-react';
+import { Icon } from '../../shared/icon';
 import { memberApi, memberKeys, membersQuery } from './api';
-import { filterMembers as selectMembers } from './model';
-import { PAGE_SIZE, parseList } from './model';
+import { filterMembers, PAGE_SIZE, parseList } from './model';
 import { useLocale } from '../../shared/preferences';
 import { useSession } from '../../shared/session';
 import { DataTable } from '../../shared/data-table';
@@ -42,7 +32,7 @@ export function Component() {
     const next = new URLSearchParams(params);
     next.delete('page');
     Object.entries(patch).forEach(([k, v]) => (v ? next.set(k, v) : next.delete(k)));
-    setParams(next, { replace: !!patch.q });
+    setParams(next, { replace: 'q' in patch });
   }
   if (isPending) return <Loading />;
   if (error) return <ErrorState error={error} retry={() => void refetch()} />;
@@ -54,7 +44,7 @@ export function Component() {
         action={
           can('member.write') && (
             <Link className="button primary" to="/members/new">
-              <Plus size={16} />
+              <Icon name="add" size={16} />
               {t('newMember')}
             </Link>
           )
@@ -63,7 +53,7 @@ export function Component() {
       <section className="panel directory-panel">
         <div className="directory-heading">
           <h2>
-            <Users size={18} />
+            <Icon name="profile-2user" size={18} />
             {t('directory')}
             <span className="count-pill">{count(data.length)}</span>
           </h2>
@@ -73,12 +63,12 @@ export function Component() {
             disabled={isFetching}
             onClick={() => void refetch()}
           >
-            <RefreshCw size={16} />
+            <Icon name="refresh-2" size={16} />
           </button>
         </div>
         <div className="table-toolbar">
           <label className="search-box">
-            <Search size={17} />
+            <Icon name="search-normal-1" size={17} />
             <input
               type="search"
               dir="auto"
@@ -93,7 +83,7 @@ export function Component() {
                 aria-label={t('clearSearch')}
                 onClick={() => change({ q: '' })}
               >
-                <X size={14} />
+                <Icon name="close-circle" size={14} />
               </button>
             )}
           </label>
@@ -161,8 +151,8 @@ function Directory({
   onPage: (page: number) => void;
   onChange: () => Promise<void>;
 }) {
-  const { t, number, date } = useLocale();
-  const filtered = selectMembers(data, state);
+  const { t, number, date, preferences } = useLocale();
+  const filtered = filterMembers(data, state, preferences.language);
   const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const page = Math.min(state.page, pages);
   const rows = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -218,7 +208,7 @@ function Directory({
                 )}
                 <th>
                   {t('name')}
-                  <ArrowDownUp size={12} aria-hidden="true" />
+                  <Icon name="arrow-3" size={12} />
                 </th>
                 <th>{t('department')}</th>
                 <th>{t('status')}</th>
@@ -305,7 +295,7 @@ function Directory({
                 disabled={page === 1}
                 onClick={() => onPage(page - 1)}
               >
-                <ChevronLeft size={17} className="directional" />
+                <Icon name="arrow-left-2" size={17} className="directional" />
               </button>
               {Array.from({ length: pages }, (_, i) => i + 1)
                 .filter((p) => p === 1 || p === pages || Math.abs(p - page) <= 1)
@@ -325,7 +315,7 @@ function Directory({
                 disabled={page === pages}
                 onClick={() => onPage(page + 1)}
               >
-                <ChevronRight size={17} className="directional" />
+                <Icon name="arrow-right-3" size={17} className="directional" />
               </button>
             </div>
           </div>

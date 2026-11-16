@@ -5,6 +5,8 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY . .
 ARG FRONTEND_ENV=production
+ARG BACKEND_BASE_URL
+ARG VITE_API_URL
 RUN pnpm run "build:${FRONTEND_ENV}" && mv dist/api-location.conf /tmp/api-location.conf
 
 FROM nginxinc/nginx-unprivileged:1.28-alpine AS runtime

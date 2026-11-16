@@ -1,19 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, Link, Outlet, useLocation, useNavigate } from 'react-router';
-import {
-  LayoutDashboard,
-  Users,
-  UserRound,
-  Settings2,
-  PanelsTopLeft,
-  ArrowUpRight,
-  Menu,
-  ChevronRight,
-  Sprout,
-  Building2,
-  CircleHelp,
-  X,
-} from 'lucide-react';
+import { Icon } from '../shared/icon';
 import { Dialog } from 'radix-ui';
 import { useMutation } from '@tanstack/react-query';
 import { demoMode, displayName } from '../shared/account-api';
@@ -22,7 +9,7 @@ import { useSession } from '../shared/session';
 import { ActionMenu, Avatar, Modal } from '../shared/ui';
 export function Shell() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { t, preferences } = useLocale();
+  const { t } = useLocale();
   const { user, role, toggle, can, signOut } = useSession();
   const logout = useMutation({ mutationFn: signOut });
   const location = useLocation();
@@ -37,15 +24,18 @@ export function Shell() {
         : location.pathname === '/components'
           ? 'components'
           : 'overview';
+  const title = `${t(section)} · ${t('app')}`;
   useEffect(() => {
-    document.title = `${t(section)} · ${t('app')}`;
+    document.title = title;
+  }, [title]);
+  useEffect(() => {
     main.current?.focus();
-  }, [location.pathname, preferences.language]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
   const nav = (
     <>
       <div className="brand">
         <span className="brand-mark">
-          <Sprout size={23} />
+          <Icon name="tree" size={23} />
         </span>
         <span>
           {t('app')}
@@ -54,68 +44,62 @@ export function Shell() {
       </div>
       <div className="company">
         <span className="company-icon">
-          <Building2 size={19} />
+          <Icon name="buildings" size={19} />
         </span>
         <div>
           <strong>{t('company')}</strong>
           {demoMode && <small>{t('demo')}</small>}
         </div>
       </div>
-      <p className="nav-label">{t('workspace')}</p>
-      <nav aria-label={t('workspace')}>
-        {demoMode && (
-          <NavLink end to="/" onClick={() => setMobileOpen(false)}>
-            <LayoutDashboard size={18} />
-            {t('overview')}
-          </NavLink>
-        )}
-        {can('member.read') && (
-          <NavLink to="/members" onClick={() => setMobileOpen(false)}>
-            <Users size={18} />
-            {t('members')}
-            <span className="nav-dot" />
-          </NavLink>
-        )}
-      </nav>
+      {demoMode && (
+        <>
+          <p className="nav-label">{t('workspace')}</p>
+          <nav aria-label={t('workspace')}>
+            <NavLink end to="/" onClick={() => setMobileOpen(false)}>
+              <Icon name="element-4" size={18} />
+              {t('overview')}
+            </NavLink>
+            {can('member.read') && (
+              <NavLink to="/members" onClick={() => setMobileOpen(false)}>
+                <Icon name="profile-2user" size={18} />
+                {t('members')}
+              </NavLink>
+            )}
+          </nav>
+        </>
+      )}
       <p className="nav-label">{t('administration')}</p>
       <nav aria-label={t('administration')}>
         <NavLink to="/account" onClick={() => setMobileOpen(false)}>
-          <UserRound size={18} />
+          <Icon name="user" size={18} />
           {t('myAccount')}
         </NavLink>
         <NavLink to="/settings" onClick={() => setMobileOpen(false)}>
-          <Settings2 size={18} />
+          <Icon name="setting-2" size={18} />
           {t('settings')}
         </NavLink>
         {import.meta.env.DEV && (
           <NavLink to="/components" onClick={() => setMobileOpen(false)}>
-            <PanelsTopLeft size={18} />
+            <Icon name="category" size={18} />
             {t('components')}
           </NavLink>
         )}
       </nav>
-      <div className="sidebar-bottom">
-        <div className="workspace-note">
-          <span className="note-icon">
-            <Sprout size={20} />
-          </span>
-          <strong>{t('orgHint')}</strong>
-          <p>{t('orgBody')}</p>
-        </div>
-        {demoMode && (
+      {demoMode && (
+        <div className="sidebar-bottom">
           <Modal
             trigger={
               <button className="help-link">
-                <CircleHelp size={17} />
+                <Icon name="message-question" size={17} />
                 {t('learnMore')}
-                <ArrowUpRight size={15} className="directional" />
+                <Icon name="arrow-right-1" size={15} className="directional" />
               </button>
             }
             title={t('learnMore')}
             description={t('aboutDemo')}
           />
-        )}
-      </div>
+        </div>
+      )}
     </>
   );
   return (
@@ -131,7 +115,7 @@ export function Shell() {
               <Dialog.Root open={mobileOpen} onOpenChange={setMobileOpen}>
                 <Dialog.Trigger asChild>
                   <button className="icon-button mobile-menu" aria-label={t('openNav')}>
-                    <Menu size={20} />
+                    <Icon name="menu-1" size={20} />
                   </button>
                 </Dialog.Trigger>
                 <Dialog.Portal>
@@ -141,14 +125,14 @@ export function Shell() {
                     {nav}
                     <Dialog.Close asChild>
                       <button aria-label={t('close')} className="icon-button dialog-close">
-                        <X size={18} />
+                        <Icon name="close-circle" size={18} />
                       </button>
                     </Dialog.Close>
                   </Dialog.Content>
                 </Dialog.Portal>
               </Dialog.Root>
               <span className="top-company">{t('company')}</span>
-              <ChevronRight size={14} className="directional" />
+              <Icon name="arrow-right-3" size={14} className="directional" />
               <span>{t(section)}</span>
             </div>
             <div className="top-actions">
@@ -189,7 +173,7 @@ export function Shell() {
             )}
             <nav className="breadcrumbs" aria-label={t('home')}>
               <Link to="/">{t('workspace')}</Link>
-              <ChevronRight size={12} className="directional" />
+              <Icon name="arrow-right-3" size={12} className="directional" />
               <span aria-current="page">{t(section)}</span>
             </nav>
             {role === 'viewer' && <div className="alert info">{t('readOnly')}</div>}

@@ -1,16 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router';
-import {
-  Users,
-  UserCheck,
-  Building2,
-  UserRoundMinus,
-  Plus,
-  ArrowUpRight,
-  Settings2,
-  ArrowRight,
-  Layers3,
-} from 'lucide-react';
+import { Icon } from '../../shared/icon';
 import { membersQuery } from '../members/api';
 import { useLocale } from '../../shared/preferences';
 import { useSession } from '../../shared/session';
@@ -24,10 +14,10 @@ export function Component() {
   const active = data.filter((m) => m.status === 'active').length;
   const percent = data.length ? Math.round((active / data.length) * 100) : 0;
   const metrics = [
-    { label: 'directoryTotal', value: data.length, icon: Users },
-    { label: 'activeMembers', value: active, icon: UserCheck },
-    { label: 'departments', value: new Set(data.map((m) => m.department)).size, icon: Building2 },
-    { label: 'inactiveMembers', value: data.length - active, icon: UserRoundMinus },
+    { label: 'directoryTotal', value: data.length, icon: 'profile-2user' },
+    { label: 'activeMembers', value: active, icon: 'user-tick' },
+    { label: 'departments', value: new Set(data.map((m) => m.department)).size, icon: 'buildings' },
+    { label: 'inactiveMembers', value: data.length - active, icon: 'user-minus' },
   ] as const;
   return (
     <>
@@ -38,18 +28,18 @@ export function Component() {
         action={
           can('member.write') && (
             <Link className="button primary" to="/members/new">
-              <Plus size={16} />
+              <Icon name="add" size={16} />
               {t('newMember')}
             </Link>
           )
         }
       />
       <div className="metrics">
-        {metrics.map(({ label, value, icon: Icon }) => (
+        {metrics.map(({ label, value, icon }) => (
           <section className="metric" key={label}>
             <div className="metric-top">
               <span>{t(label)}</span>
-              <Icon size={18} />
+              <Icon name={icon} size={18} />
             </div>
             <strong>{number(value)}</strong>
             <small>{t('lastUpdated')}</small>
@@ -65,7 +55,7 @@ export function Component() {
             </div>
             <Link className="text-link" to="/members">
               {t('viewAll')}
-              <ArrowUpRight size={15} className="directional" />
+              <Icon name="arrow-right-1" size={15} className="directional" />
             </Link>
           </div>
           {data.length ? (
@@ -83,7 +73,7 @@ export function Component() {
                       <span>{t(member.department)}</span>
                     </div>
                     <Badge status={member.status} />
-                    <ArrowRight size={16} className="directional muted" />
+                    <Icon name="arrow-right-1" size={16} className="directional muted" />
                   </Link>
                 ))}
             </div>
@@ -98,7 +88,7 @@ export function Component() {
               <p>{t('healthHint')}</p>
             </div>
             <span className="icon-tile">
-              <Users size={18} />
+              <Icon name="profile-2user" size={18} />
             </span>
           </div>
           <div className="health-value">
@@ -128,7 +118,7 @@ export function Component() {
             </span>
           </div>
           <div className="health-note">
-            <Layers3 size={18} />
+            <Icon name="layer" size={18} />
             <p>{t('assignmentHint')}</p>
           </div>
         </section>
@@ -140,24 +130,24 @@ export function Component() {
             {can('member.write') && (
               <Link to="/members/new">
                 <span className="icon-tile">
-                  <Plus size={19} />
+                  <Icon name="add" size={19} />
                 </span>
                 <div>
                   <strong>{t('newMember')}</strong>
                   <p>{t('addHint')}</p>
                 </div>
-                <ArrowUpRight size={18} className="directional" />
+                <Icon name="arrow-right-1" size={18} className="directional" />
               </Link>
             )}
             <Link to="/settings">
               <span className="icon-tile">
-                <Settings2 size={19} />
+                <Icon name="setting-2" size={19} />
               </span>
               <div>
                 <strong>{t('preferences')}</strong>
                 <p>{t('settingsHint')}</p>
               </div>
-              <ArrowUpRight size={18} className="directional" />
+              <Icon name="arrow-right-1" size={18} className="directional" />
             </Link>
           </div>
         </section>

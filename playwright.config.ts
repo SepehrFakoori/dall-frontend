@@ -6,7 +6,8 @@ export default defineConfig({
   use: { baseURL: 'http://127.0.0.1:5174', trace: 'retain-on-failure' },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'], channel: 'chrome' } }],
   webServer: {
-    command: 'pnpm demo --port 5174 --strictPort',
+    command:
+      'node ./node_modules/vite/bin/vite.js --mode demo --host 127.0.0.1 --port 5174 --strictPort',
     url: 'http://127.0.0.1:5174',
     reuseExistingServer: !process.env.CI,
   },

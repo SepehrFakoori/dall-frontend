@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Save } from 'lucide-react';
+import { Icon } from '../../shared/icon';
 import {
   displayName,
   profileSchema,
@@ -8,6 +8,7 @@ import {
   type ProfileInput,
 } from '../../shared/account-api';
 import { useSession } from '../../shared/session';
+import { UnsavedChanges } from '../../shared/unsaved-changes';
 import { useLocale } from '../../shared/preferences';
 import { ApiError } from '../../shared/http';
 import { Avatar, Button, Field, PageHeader, useNotify } from '../../shared/ui';
@@ -38,7 +39,8 @@ function Profile({ user }: { user: Account }) {
     formState: { errors, isSubmitting, isDirty },
   } = useForm<ProfileInput>({
     resolver: zodResolver(profileSchema),
-    defaultValues: editableProfile(user),
+    values: editableProfile(user),
+    resetOptions: { keepDirtyValues: true },
   });
   return (
     <>
@@ -112,12 +114,13 @@ function Profile({ user }: { user: Account }) {
               {t('cancel')}
             </Button>
             <Button type="submit" disabled={!isDirty} loading={isSubmitting}>
-              <Save size={16} />
+              <Icon name="clipboard-tick" size={16} />
               {t('save')}
             </Button>
           </div>
         </fieldset>
       </form>
+      {isDirty && <UnsavedChanges />}
     </>
   );
 }

@@ -1,11 +1,17 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Monitor, Moon, Sun, Globe2, Palette, Wrench } from 'lucide-react';
+import { Icon } from '../../shared/icon';
 import { useLocale, type Preferences } from '../../shared/preferences';
 import { useSession } from '../../shared/session';
 import { demoMode } from '../../shared/account-api';
 import { Button, Confirm, Field, PageHeader, useNotify } from '../../shared/ui';
 import { failNextRequest, memberApi, memberKeys } from '../members/api';
+const themeOptions = [
+  { value: 'light', icon: 'sun-1' },
+  { value: 'dark', icon: 'moon' },
+  { value: 'system', icon: 'monitor' },
+] as const;
+
 export function Component() {
   const { t, preferences, update, date, timestamp, money } = useLocale();
   const { role, toggle, can } = useSession();
@@ -46,7 +52,7 @@ export function Component() {
       <div className="settings-stack">
         <section className="panel settings-section">
           <div className="settings-title">
-            <Palette size={20} />
+            <Icon name="color-swatch" size={20} />
             <div>
               <h2>{t('appearance')}</h2>
               <p>{t('appearanceHint')}</p>
@@ -54,20 +60,16 @@ export function Component() {
           </div>
           <fieldset className="theme-options">
             <legend>{t('theme')}</legend>
-            {[
-              { value: 'light', icon: Sun },
-              { value: 'dark', icon: Moon },
-              { value: 'system', icon: Monitor },
-            ].map(({ value, icon: Icon }) => (
+            {themeOptions.map(({ value, icon }) => (
               <label key={value} className={preferences.theme === value ? 'selected' : ''}>
                 <input
                   type="radio"
                   name="theme"
                   checked={preferences.theme === value}
-                  onChange={() => update({ theme: value as Preferences['theme'] })}
+                  onChange={() => update({ theme: value })}
                 />
-                <Icon size={22} />
-                <span>{t(value as 'light')}</span>
+                <Icon name={icon} size={22} />
+                <span>{t(value)}</span>
               </label>
             ))}
           </fieldset>
@@ -78,7 +80,7 @@ export function Component() {
         </section>
         <section className="panel settings-section">
           <div className="settings-title">
-            <Globe2 size={20} />
+            <Icon name="global" size={20} />
             <div>
               <h2>{t('regional')}</h2>
               <p>{t('regionalHint')}</p>
@@ -131,7 +133,7 @@ export function Component() {
         {demoMode && (
           <section className="panel settings-section">
             <div className="settings-title">
-              <Wrench size={20} />
+              <Icon name="designtools" size={20} />
               <div>
                 <h2>{t('demoTools')}</h2>
                 <p>{t('demoToolsHint')}</p>

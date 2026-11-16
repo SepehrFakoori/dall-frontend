@@ -20,6 +20,11 @@ test('requires credentials, returns to the requested URL, and ends the session o
   await expect(page).toHaveURL('/members?status=active');
   await page.getByRole('link', { name: 'My account' }).click();
   await page.getByLabel('First name').fill('نیلوفر');
+  await page.getByRole('link', { name: 'Settings', exact: true }).click();
+  const discardDialog = page.getByRole('alertdialog');
+  await expect(discardDialog).toBeVisible();
+  await discardDialog.getByRole('button', { name: 'Cancel' }).click();
+  await expect(page.getByLabel('First name')).toHaveValue('نیلوفر');
   await page.getByLabel('Last name').fill('Rezaei');
   await page.getByLabel('Email address').fill('invalid');
   await page.getByRole('button', { name: 'Save changes' }).click();
@@ -50,6 +55,17 @@ for (const width of [390, 1440]) {
         .click();
       await expect(page.locator('html')).toHaveAttribute('lang', lang);
       await expect(page.locator('html')).toHaveAttribute('dir', lang === 'fa' ? 'rtl' : 'ltr');
+      const signInArrow = page.locator('button[type="submit"] svg');
+      await expect(signInArrow).toHaveCSS(
+        'transform',
+        lang === 'fa' ? 'matrix(-1, 0, 0, 1, 0, 0)' : 'none',
+      );
+      await expect
+        .poll(() =>
+          signInArrow.locator('use').evaluate((glyph) => (glyph as SVGUseElement).getBBox().width),
+        )
+        .toBeGreaterThan(0);
+      await expect(page.locator('.password-field button svg')).toHaveCSS('transform', 'none');
       expect(await directionOf(page.locator('.login-fields'))).toBe(lang === 'fa' ? 'rtl' : 'ltr');
       const brandOnRight =
         (await startEdge(page.locator('.brand'))) >
@@ -81,6 +97,7 @@ for (const width of [390, 1440]) {
     await page.getByRole('button', { name: 'منوی حساب' }).click();
     expect(await directionOf(page.getByRole('menu'))).toBe('rtl');
     await page.keyboard.press('Escape');
+    await page.getByRole('button', { name: 'انصراف', exact: true }).click();
     await page.goto('/components');
     const general = page.getByRole('tab', { name: 'عمومی' });
     await general.focus();

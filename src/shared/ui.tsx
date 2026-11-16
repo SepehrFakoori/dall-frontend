@@ -7,17 +7,7 @@ import {
   type ReactNode,
 } from 'react';
 import { AlertDialog, Dialog, Direction, DropdownMenu, Tooltip, Tabs, Popover } from 'radix-ui';
-import {
-  AlertCircle,
-  Check,
-  CheckCircle2,
-  ChevronDown,
-  Loader2,
-  MoreHorizontal,
-  Search,
-  Users,
-  X,
-} from 'lucide-react';
+import { Icon } from './icon';
 import { useLocale } from './preferences';
 import type { MessageKey } from './i18n/messages';
 import { ApiError } from './http';
@@ -40,7 +30,7 @@ export function Button({
       disabled={disabled || loading}
       aria-busy={loading || undefined}
     >
-      {loading && <Loader2 className="spin" size={16} />}
+      {loading && <Icon name="refresh" className="spin" size={16} />}
       {children}
     </button>
   );
@@ -145,7 +135,7 @@ export function ErrorState({ error, retry }: { error?: unknown; retry?: () => vo
   const key = error instanceof ApiError ? error.code : 'error';
   return (
     <div className="state" role="alert">
-      <AlertCircle />
+      <Icon name="danger" />
       <h2>{t(key)}</h2>
       {retry && (
         <Button variant="secondary" onClick={retry}>
@@ -160,7 +150,7 @@ export function Empty({ filtered, action }: { filtered?: boolean; action?: React
   return (
     <div className="state">
       <span className="empty-icon">
-        <Users />
+        <Icon name="profile-2user" />
       </span>
       <h2>{t(filtered ? 'noResults' : 'empty')}</h2>
       <p className="muted">{t(filtered ? 'noResultsHint' : 'emptyHint')}</p>
@@ -174,7 +164,7 @@ export function Help({ children }: { children: ReactNode }) {
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
           <button className="icon-button" type="button">
-            <AlertCircle size={16} />
+            <Icon name="message-question" size={16} />
             <span className="sr-only">{children}</span>
           </button>
         </Tooltip.Trigger>
@@ -202,11 +192,11 @@ export function ActionMenu({
       <DropdownMenu.Trigger asChild>
         <button className={icon ? 'icon-button' : 'button secondary'} aria-label={label}>
           {icon ? (
-            <MoreHorizontal size={18} />
+            <Icon name="more" size={18} />
           ) : (
             <>
               {label}
-              <ChevronDown size={14} />
+              <Icon name="arrow-down-1" size={14} />
             </>
           )}
         </button>
@@ -307,7 +297,7 @@ export function Modal({
           {children}
           <Dialog.Close asChild>
             <button className="icon-button dialog-close" aria-label={t('close')}>
-              <X size={18} />
+              <Icon name="close-circle" size={18} />
             </button>
           </Dialog.Close>
         </Dialog.Content>
@@ -324,7 +314,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       <div className="toast-region" role="status" aria-live="polite">
         {notice && (
           <div className="toast" key={notice.id}>
-            <CheckCircle2 size={18} />
+            <Icon name="tick-circle" size={18} />
             <span>{notice.message}</span>
             <Dismiss onClick={() => setNotice(null)} />
           </div>
@@ -337,7 +327,7 @@ function Dismiss({ onClick }: { onClick: () => void }) {
   const { t } = useLocale();
   return (
     <button className="icon-button" aria-label={t('close')} onClick={onClick}>
-      <X size={16} />
+      <Icon name="close-circle" size={16} />
     </button>
   );
 }
@@ -362,13 +352,13 @@ export function Combobox({
       <Popover.Trigger asChild>
         <button id={id} type="button" className="control combo" aria-label={label}>
           {options.find((o) => o.value === value)?.label || label}
-          <ChevronDown size={16} />
+          <Icon name="arrow-down-1" size={16} />
         </button>
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content dir={dir} className="menu combo-menu" align="start" sideOffset={5}>
           <label className="search-box">
-            <Search size={16} />
+            <Icon name="search-normal-1" size={16} />
             <input
               dir="auto"
               aria-label={label}
@@ -391,7 +381,7 @@ export function Combobox({
                   }}
                 >
                   {o.label}
-                  {o.value === value && <Check size={15} />}
+                  {o.value === value && <Icon name="tick-circle" size={15} />}
                 </button>
               ))}
           </div>

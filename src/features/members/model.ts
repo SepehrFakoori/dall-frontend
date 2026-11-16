@@ -41,7 +41,7 @@ export function parseList(params: URLSearchParams): ListState {
     page: Math.min(100000, Math.max(1, Math.floor(Number(params.get('page')) || 1))),
   };
 }
-export function filterMembers(members: Member[], state: ListState) {
+export function filterMembers(members: Member[], state: ListState, language = 'en') {
   const search = state.search.toLocaleLowerCase();
   return members
     .filter(
@@ -51,9 +51,9 @@ export function filterMembers(members: Member[], state: ListState) {
     )
     .sort((a, b) =>
       state.sort === 'az'
-        ? a.name.localeCompare(b.name)
+        ? a.name.localeCompare(b.name, language)
         : state.sort === 'za'
-          ? b.name.localeCompare(a.name)
+          ? b.name.localeCompare(a.name, language)
           : b.joined.localeCompare(a.joined) || a.id.localeCompare(b.id),
     );
 }

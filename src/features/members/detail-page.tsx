@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Pencil, ShieldCheck } from 'lucide-react';
+import { Icon } from '../../shared/icon';
 import { memberQuery } from './api';
 import { useLocale } from '../../shared/preferences';
 import { useSession } from '../../shared/session';
@@ -16,7 +16,7 @@ export function Component() {
   return (
     <>
       <Link className="back-link" to="/members">
-        <ArrowLeft className="directional" size={15} />
+        <Icon name="arrow-left" className="directional" size={15} />
         {t('backMembers')}
       </Link>
       <PageHeader
@@ -25,7 +25,7 @@ export function Component() {
         action={
           can('member.write') && (
             <Link className="button secondary" to={`/members/${data.id}/edit`}>
-              <Pencil size={15} />
+              <Icon name="edit-2" size={15} />
               {t('edit')}
             </Link>
           )
@@ -78,7 +78,7 @@ export function Component() {
         <Tabs.Content value="security">
           <section className="panel form-section">
             <h2>
-              <ShieldCheck size={18} />
+              <Icon name="shield-tick" size={18} />
               {t('security')}
               <Help>{t('tooltip')}</Help>
             </h2>

@@ -1,24 +1,17 @@
 import { useRef } from 'react';
-import { Link, useBeforeUnload, useBlocker, useNavigate, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Save } from 'lucide-react';
+import { Icon } from '../../shared/icon';
 import { memberApi, memberKeys, memberQuery } from './api';
 import { departments, memberSchema, type Member, type MemberInput } from './model';
 import { ApiError } from '../../shared/http';
 import { useLocale } from '../../shared/preferences';
 import { useSession } from '../../shared/session';
+import { UnsavedChanges } from '../../shared/unsaved-changes';
 import type { MessageKey } from '../../shared/i18n/messages';
-import {
-  Button,
-  Confirm,
-  ErrorState,
-  Field,
-  Loading,
-  PageHeader,
-  useNotify,
-} from '../../shared/ui';
+import { Button, ErrorState, Field, Loading, PageHeader, useNotify } from '../../shared/ui';
 export function Component() {
   const { id } = useParams();
   const { can } = useSession();
@@ -71,20 +64,13 @@ export function MemberForm({ member }: { member?: Member }) {
         });
     },
   });
-  const blocker = useBlocker(() => isDirty && !submitted.current);
-  useBeforeUnload((event) => {
-    if (isDirty && !submitted.current) {
-      event.preventDefault();
-      event.returnValue = '';
-    }
-  });
   const disabled = isSubmitting || mutation.isPending;
   const message = (key: keyof MemberInput) =>
     errors[key]?.message ? t(errors[key]?.message as MessageKey) : undefined;
   return (
     <>
       <Link className="back-link" to="/members">
-        <ArrowLeft size={15} className="directional" />
+        <Icon name="arrow-left" size={15} className="directional" />
         {t('backMembers')}
       </Link>
       <PageHeader
@@ -208,23 +194,12 @@ export function MemberForm({ member }: { member?: Member }) {
             {t('cancel')}
           </Link>
           <Button type="submit" loading={disabled}>
-            <Save size={16} />
+            <Icon name="clipboard-tick" size={16} />
             {t(disabled ? 'saving' : member ? 'save' : 'createMember')}
           </Button>
         </div>
       </form>
-      <Confirm
-        open={blocker.state === 'blocked'}
-        onOpenChange={(open) => {
-          if (!open && blocker.state === 'blocked') blocker.reset();
-        }}
-        title={t('leaveTitle')}
-        description={t('leaveHint')}
-        confirm={t('discard')}
-        onConfirm={() => {
-          if (blocker.state === 'blocked') blocker.proceed();
-        }}
-      />
+      {isDirty && <UnsavedChanges hasChanges={() => !submitted.current} />}
     </>
   );
 }

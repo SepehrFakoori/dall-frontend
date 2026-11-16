@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Switch, Tabs } from 'radix-ui';
-import { Info } from 'lucide-react';
+import { Icon } from '../../shared/icon';
 import { departments } from '../members/model';
 import { useLocale } from '../../shared/preferences';
 import {
@@ -16,6 +16,13 @@ import {
   Popover,
   useNotify,
 } from '../../shared/ui';
+const feedbackIcons = {
+  info: 'info-circle',
+  success: 'tick-circle',
+  warning: 'danger',
+  danger: 'warning-2',
+} as const;
+
 export function Component() {
   const { t, money } = useLocale();
   const notify = useNotify();
@@ -57,7 +64,7 @@ export function Component() {
           <div className="form-grid">
             {(['info', 'success', 'warning', 'danger'] as const).map((type) => (
               <div key={type} className={`alert ${type}`}>
-                <Info size={15} /> {t(type)}
+                <Icon name={feedbackIcons[type]} size={15} /> {t(type)}
               </div>
             ))}
           </div>

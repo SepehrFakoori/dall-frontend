@@ -65,7 +65,12 @@ const demoApi: AccountApi = {
 };
 const djangoApi: AccountApi = {
   async current(signal) {
-    return (await request<{ user: Account | null }>('/auth/session/', { signal })).user;
+    try {
+      return (await request<{ user: Account | null }>('/auth/session/', { signal })).user;
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 401) return null;
+      throw error;
+    }
   },
   async signIn(credentials) {
     return (

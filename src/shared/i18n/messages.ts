@@ -122,9 +122,6 @@ export const en = {
   quickActions: 'Workspace shortcuts',
   addHint: 'Keep your directory growing',
   settingsHint: 'Make this workspace your own',
-  orgHint: 'One organization. A shared foundation.',
-  orgBody:
-    'Departments and project memberships describe participation. Business access is granted separately through scoped role assignments.',
   learnMore: 'About this workspace',
   readOnly: 'You are viewing the read-only demo role.',
   preferences: 'Workspace preferences',
@@ -356,9 +353,6 @@ export const fa: Record<MessageKey, string> = {
   quickActions: 'میانبرهای فضای کاری',
   addHint: 'فهرست سازمان را گسترش دهید',
   settingsHint: 'فضای کاری را شخصی کنید',
-  orgHint: 'یک سازمان؛ یک زیربنای مشترک.',
-  orgBody:
-    'عضویت واحدها و پروژه‌ها نشان‌دهنده مشارکت است. دسترسی از طریق نقش‌های دارای محدوده اعطا می‌شود.',
   learnMore: 'درباره این فضای کاری',
   readOnly: 'شما در نقش آزمایشی فقط خواندنی هستید.',
   preferences: 'ترجیحات فضای کاری',

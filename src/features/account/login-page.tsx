@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router';
 import { useForm } from 'react-hook-form';
-import { ArrowRight, Eye, EyeOff, Languages, Sprout } from 'lucide-react';
+import { Icon } from '../../shared/icon';
 import { demoCredentials, demoMode } from '../../shared/account-api';
 import { ApiError } from '../../shared/http';
 import { useLocale } from '../../shared/preferences';
@@ -47,7 +47,7 @@ export function Component() {
         <header className="login-masthead">
           <div className="brand">
             <span className="brand-mark">
-              <Sprout size={23} />
+              <Icon name="tree" size={23} />
             </span>
             <span>{app}</span>
           </div>
@@ -56,7 +56,7 @@ export function Component() {
             lang={nextLanguage}
             onClick={() => update({ language: nextLanguage })}
           >
-            <Languages size={16} />
+            <Icon name="translate" size={16} />
             {nextLanguage === 'fa' ? 'فارسی' : 'English'}
           </Button>
         </header>
@@ -111,7 +111,7 @@ export function Component() {
                       aria-label={t(visible ? 'hidePassword' : 'showPassword')}
                       onClick={() => setVisible(!visible)}
                     >
-                      {visible ? <EyeOff size={17} /> : <Eye size={17} />}
+                      <Icon name={visible ? 'eye-slash' : 'eye'} size={17} />
                     </button>
                   </div>
                 )}
@@ -127,7 +127,7 @@ export function Component() {
               )}
               <Button loading={isSubmitting} type="submit">
                 {title}
-                <ArrowRight size={16} className="directional" />
+                <Icon name="arrow-right-1" size={16} className="directional" />
               </Button>
             </fieldset>
           </form>
