@@ -1,0 +1,126 @@
+@font-face {
+  font-family: 'IRANSansX';
+  src: url('../assets/fonts/IRANSansXVF.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 100 1000;
+  font-display: swap;
+}
+
+/* Use the supplied face for Persian glyphs in mixed-language content as well. */
+@font-face {
+  font-family: 'IRANSansX Persian';
+  src: url('../assets/fonts/IRANSansXVF.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 100 1000;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
+:root {
+  color-scheme: light;
+  --bg: #f6f7f9;
+  --surface: #fff;
+  --surface-muted: #f9fafb;
+  --surface-hover: #f1f4f3;
+  --text: #202b32;
+  --text-muted: #5f6c73;
+  --border: #e4e8eb;
+  --border-strong: #c6ced2;
+  --primary: #245c48;
+  --primary-hover: #194534;
+  --primary-soft: #eaf2ed;
+  --on-primary: #fff;
+  --success: #216443;
+  --success-bg: #edf7ef;
+  --warning: #825b0b;
+  --warning-bg: #fff5db;
+  --danger: #b33535;
+  --danger-bg: #fff0ef;
+  --info: #315e83;
+  --info-bg: #edf4fa;
+  --focus: #307eaf;
+  --overlay: rgb(14 24 29 / 42%);
+  --font: 'IRANSansX Persian', Inter, 'Segoe UI', Tahoma, Arial, sans-serif;
+  --font-fa: 'IRANSansX', Tahoma, 'Segoe UI', Arial, sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 1.75rem;
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --line-normal: 1.55;
+  --line-heading: 1.25;
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 20px;
+  --s6: 24px;
+  --s8: 32px;
+  --s10: 40px;
+  --s12: 48px;
+  --s16: 64px;
+  --border-width: 1px;
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-lg: 8px;
+  --radius-pill: 999px;
+  --shadow-sm: 0 1px 2px rgb(20 35 30 / 3%);
+  --shadow-lg: 0 12px 40px rgb(20 30 30 / 14%);
+  --control: 38px;
+  --touch: 40px;
+  --table-pad: 18px;
+  --sidebar: 240px;
+  --topbar: 72px;
+  --content: 1280px;
+  --form-width: 920px;
+  --dialog-width: 460px;
+  --z-header: 10;
+  --z-overlay: 40;
+  --z-dialog: 50;
+  --z-popover: 60;
+  --z-toast: 70;
+  --fast: 120ms;
+  --duration: 200ms;
+  --easing: cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #151c20;
+  --surface: #1c252a;
+  --surface-muted: #202b30;
+  --surface-hover: #29373a;
+  --text: #e5eceb;
+  --text-muted: #a6b4b8;
+  --border: #334147;
+  --border-strong: #526269;
+  --primary: #83c5a2;
+  --primary-hover: #a0d9bb;
+  --on-primary: #132a20;
+  --primary-soft: #273e33;
+  --success: #9dd5ad;
+  --success-bg: #253d2d;
+  --warning: #e8cc82;
+  --warning-bg: #42381d;
+  --danger: #ffaaa5;
+  --danger-bg: #4b2b2c;
+  --info: #a1c8ed;
+  --info-bg: #253b4c;
+  --focus: #8dc9ef;
+}
+:root[data-density='compact'] {
+  --table-pad: 10px;
+}
+html[lang='fa'] {
+  --font: var(--font-fa);
+}
+:lang(fa) {
+  font-family: var(--font-fa);
+}
+/* Responsive contract: mobile < 720px, tablet < 1080px, desktop >= 1080px.
+   CSS custom properties cannot be used in native media query conditions. */

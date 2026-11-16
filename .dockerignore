@@ -1,0 +1,10 @@
+node_modules
+dist
+.git
+.env*
+!.env.development
+!.env.staging
+!.env.production
+coverage
+playwright-report
+test-results
